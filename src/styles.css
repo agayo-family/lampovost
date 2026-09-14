@@ -1112,3 +1112,202 @@ header, main, .sound, .lightbox { position: relative; z-index: 5; }
   }
   .photo-cluster.count-1 .photo-button img { max-height: 58svh; }
 }
+
+
+/* ===== PHONE AUTO-SCALING =====
+   Final overrides only for small screens. Desktop design stays unchanged. */
+html {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+body {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: clip;
+}
+img, svg, video, canvas { max-width: 100%; }
+
+@media (max-width: 760px) {
+  :root { --phone-gutter: clamp(12px, 4vw, 22px); }
+
+  .hero {
+    width: 100%;
+    min-height: 100svh;
+    min-height: 100dvh;
+    padding-top: calc(clamp(58px, 12vw, 76px) + env(safe-area-inset-top));
+    padding-right: calc(var(--phone-gutter) + env(safe-area-inset-right));
+    padding-bottom: calc(clamp(48px, 11vw, 70px) + env(safe-area-inset-bottom));
+    padding-left: calc(var(--phone-gutter) + env(safe-area-inset-left));
+    gap: clamp(16px, 4vw, 24px);
+  }
+  .hero::before {
+    left: calc(8px + env(safe-area-inset-left));
+    right: calc(8px + env(safe-area-inset-right));
+  }
+  .hero-card,
+  .hero-actions,
+  .paper-strip {
+    width: 100%;
+    max-width: 100%;
+  }
+  .hero-card {
+    padding: clamp(34px, 9vw, 48px) clamp(20px, 6vw, 32px) clamp(34px, 8vw, 44px);
+  }
+  .rough-title {
+    max-width: 100%;
+    white-space: nowrap;
+  }
+  .rough-title-black { font-size: clamp(29px, 10.1vw, 52px); }
+  .rough-title-red { font-size: clamp(30px, 10.3vw, 54px); }
+  .hero-and { font-size: clamp(17px, 5.5vw, 28px); }
+  .hero-card p {
+    margin-top: clamp(22px, 6vw, 34px);
+    font-size: clamp(18px, 5.5vw, 24px);
+  }
+  .paper-strip {
+    min-height: 46px;
+    padding-inline: clamp(16px, 5vw, 28px);
+    font-size: clamp(20px, 6.8vw, 26px);
+  }
+  .hero-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 11px;
+  }
+  .marker-button {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    min-height: clamp(52px, 14vw, 60px);
+    padding: 13px clamp(16px, 5vw, 24px) 15px;
+    font-size: clamp(17px, 5.2vw, 21px);
+  }
+  .hero-etched {
+    width: min(72vw, 330px);
+    left: calc(var(--phone-gutter) + env(safe-area-inset-left));
+  }
+  .stamp {
+    right: calc(var(--phone-gutter) + env(safe-area-inset-right));
+    bottom: calc(18px + env(safe-area-inset-bottom));
+  }
+  .sound {
+    top: calc(10px + env(safe-area-inset-top));
+    right: calc(10px + env(safe-area-inset-right));
+    max-width: calc(100vw - 20px - env(safe-area-inset-left) - env(safe-area-inset-right));
+    padding: 8px 11px;
+    font-size: clamp(13px, 4vw, 15px);
+  }
+
+  .intro-wrap {
+    width: 100%;
+    padding-left: calc(var(--phone-gutter) + env(safe-area-inset-left));
+    padding-right: calc(var(--phone-gutter) + env(safe-area-inset-right));
+  }
+  .intro-note {
+    width: 100%;
+    max-width: 720px;
+    min-height: clamp(165px, 48vw, 205px);
+    padding: clamp(27px, 8vw, 38px) clamp(22px, 7vw, 34px);
+  }
+  .handwritten { font-size: clamp(23px, 7vw, 28px); }
+
+  .gallery {
+    width: 100%;
+    max-width: 100%;
+    padding-left: calc(var(--phone-gutter) + env(safe-area-inset-left));
+    padding-right: calc(var(--phone-gutter) + env(safe-area-inset-right));
+  }
+  .photo-cluster.count-1 {
+    width: 100%;
+    max-width: 100%;
+    min-height: 72svh;
+    min-height: 72dvh;
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .photo-cluster.count-1 .photo-pile { max-width: 100%; }
+  .photo-cluster.count-1 .polaroid-wrap,
+  .photo-cluster.count-1:nth-of-type(4n+1) .polaroid-wrap,
+  .photo-cluster.count-1:nth-of-type(5n) .polaroid-wrap {
+    width: fit-content;
+    max-width: min(92vw, 540px);
+  }
+  .photo-cluster.count-1 .polaroid { max-width: 100%; }
+  .photo-cluster.count-1 .photo-button { max-width: 100%; }
+  .photo-cluster.count-1 .photo-button img {
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: min(62svh, 620px);
+    max-height: min(62dvh, 620px);
+  }
+
+  .ending {
+    width: 100%;
+    min-height: 86svh;
+    min-height: 86dvh;
+    padding-left: calc(var(--phone-gutter) + env(safe-area-inset-left));
+    padding-right: calc(var(--phone-gutter) + env(safe-area-inset-right));
+    padding-bottom: calc(64px + env(safe-area-inset-bottom));
+  }
+  .ending-card {
+    width: 100%;
+    max-width: 760px;
+    min-height: clamp(320px, 90vw, 390px);
+    padding: clamp(34px, 9vw, 48px) clamp(22px, 7vw, 32px);
+  }
+  .ending-card h2 { font-size: clamp(34px, 10vw, 58px); }
+  .ending-card p { font-size: clamp(21px, 6.5vw, 28px); }
+  .ending-actions {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+  .download-note {
+    max-width: 92%;
+    font-size: clamp(15px, 4.5vw, 17px);
+  }
+
+  .lightbox {
+    padding-top: calc(14px + env(safe-area-inset-top));
+    padding-right: calc(12px + env(safe-area-inset-right));
+    padding-bottom: calc(14px + env(safe-area-inset-bottom));
+    padding-left: calc(12px + env(safe-area-inset-left));
+  }
+  .lightbox img {
+    max-width: 100%;
+    max-height: 72dvh;
+  }
+  .lightbox-bar { width: 100%; }
+  .lightbox-close {
+    top: calc(10px + env(safe-area-inset-top));
+    right: calc(12px + env(safe-area-inset-right));
+  }
+}
+
+@media (max-width: 380px) {
+  .hero { gap: 13px; }
+  .hero-card { padding-inline: 18px; }
+  .rough-title-black { font-size: clamp(28px, 9.6vw, 37px); }
+  .rough-title-red { font-size: clamp(29px, 9.8vw, 39px); }
+  .hero-card p { font-size: 18px; }
+  .marker-button { font-size: 17px; }
+  .photo-cluster.count-1 .polaroid { padding-bottom: 58px; }
+  .photo-cluster.count-1 .photo-caption { font-size: 16px; }
+  .photo-cluster.count-1 .photo-download { font-size: 14px; }
+}
+
+@media (max-width: 950px) and (max-height: 520px) and (orientation: landscape) {
+  .hero {
+    min-height: auto;
+    padding-top: calc(52px + env(safe-area-inset-top));
+    padding-bottom: calc(36px + env(safe-area-inset-bottom));
+  }
+  .hero-card { width: min(760px, 92vw); }
+  .hero-etched, .doodle-heart, .doodle-bolt { display: none; }
+  .ending { min-height: auto; }
+}

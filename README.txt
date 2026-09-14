@@ -1,1 +1,1 @@
-Replace src/styles.css in your current project with this file. It changes only how photo frames size themselves: the polaroid frame now wraps to the actual visible photo size instead of forcing a fixed width.
+Replace src/index.html, src/styles.css and src/app.js in the current project. This patch adds phone auto-scaling and reliable music looping on mobile. It does not include or replace your public/photos or public/music files.

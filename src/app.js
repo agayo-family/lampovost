@@ -50,6 +50,7 @@ const revealStyles = ['rise', 'from-left', 'from-right', 'soft-spin', 'pop'];
 let content = { photos: [], music: null, zip: null };
 let activePhoto = null;
 let musicReady = false;
+let musicWanted = false;
 
 function hash(input) {
   let h = 2166136261;
@@ -266,13 +267,18 @@ function prepareMusic() {
     return false;
   }
   audio.src = content.music.url;
+  audio.loop = true;
+  audio.preload = 'auto';
+  audio.setAttribute('playsinline', '');
   audio.volume = 0;
+  audio.load();
   musicReady = true;
   return true;
 }
 
 async function fadeInMusic() {
   if (!prepareMusic()) return;
+  musicWanted = true;
   try {
     await audio.play();
     soundButton.classList.add('playing');
@@ -286,9 +292,28 @@ async function fadeInMusic() {
     };
     requestAnimationFrame(tick);
   } catch {
+    musicWanted = false;
     soundLabel.textContent = 'включить';
   }
 }
+
+async function restartMusicFromBeginning() {
+  if (!musicReady || !musicWanted) return;
+  try {
+    audio.currentTime = 0;
+    await audio.play();
+    soundButton.classList.add('playing');
+    soundLabel.textContent = 'пауза';
+  } catch {
+    soundLabel.textContent = 'включить';
+  }
+}
+
+// Native loop is enabled, and these listeners are a mobile-browser fallback.
+audio.addEventListener('ended', restartMusicFromBeginning);
+audio.addEventListener('pause', () => {
+  if (musicWanted && audio.ended) restartMusicFromBeginning();
+});
 
 function runTypewriter(element) {
   if (!element || element.dataset.typed === 'true') return;
@@ -339,15 +364,19 @@ enterButton.addEventListener('click', () => {
 soundButton.addEventListener('click', async () => {
   if (!musicReady && !prepareMusic()) return;
   if (audio.paused) {
+    musicWanted = true;
     try {
+      if (audio.ended) audio.currentTime = 0;
       await audio.play();
       if (audio.volume === 0) audio.volume = .68;
       soundButton.classList.add('playing');
       soundLabel.textContent = 'пауза';
     } catch {
+      musicWanted = false;
       soundLabel.textContent = 'включить';
     }
   } else {
+    musicWanted = false;
     audio.pause();
     soundButton.classList.remove('playing');
     soundLabel.textContent = 'включить';
