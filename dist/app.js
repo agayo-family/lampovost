@@ -12,67 +12,36 @@ const lightboxClose = document.querySelector('#lightboxClose');
 const downloadAll = document.querySelector('#downloadAll');
 
 const notes = [
-  'молодость выглядит примерно так.',
-  'вот ради таких вечеров всё и затевалось.',
-  'свои люди — самый тёплый фильтр.',
-  'не постановочно. поэтому и красиво.',
-  'молодость не перемотать. зато можно сохранить.',
-  'тот самый вечер, который потом вспоминают случайно.',
-  'мы просто были здесь. и этого достаточно.',
-  'случайный кадр — любимый кадр.',
-  'музыка закончится, а фотография останется.',
-  'ещё одну фотку — и точно идём.',
-  'если молодость можно сфотографировать — то вот она.',
-  'хорошие люди. классная атмосфера. ламповость в каждом.',
-  'не идеальный кадр. идеальное воспоминание.',
-  'тот возраст, когда воспоминания важнее планов.',
-  'вечер, который оказался больше, чем просто вечер.',
-  'лучшие истории начинаются без сценария.',
-  'пусть этот момент полежит здесь.',
-  'молодость — это когда «ещё пять минут» превращаются в воспоминание.'
+  'молодость — это когда фотографий больше, чем планов.',
+  'свои люди делают любой вечер теплее.',
+  'тот самый кадр, который потом становится любимым.',
+  'не постановочно. поэтому и настоящее.',
+  'молодость не перемотать — зато можно сохранить.',
+  'пусть этот момент останется здесь.',
+  'мы просто были рядом. и этого уже достаточно.',
+  'вечер закончился, а ощущение осталось.',
+  'для будущих нас — чтобы точно не забыть.',
+  'если молодость можно сфотографировать, то примерно так.',
+  'случайный кадр иногда помнит больше нас.',
+  'ещё одна фотография — просто на память.',
+  'хорошие люди. тёплый вечер. всё на своих местах.',
+  'тот возраст, когда важнее всего — быть здесь.',
+  'ничего идеального. зато всё настоящее.',
+  'лучшие истории редко начинаются по плану.',
+  'молодость — прямо сейчас. не потом.',
+  'иногда одного кадра хватает, чтобы вернуться.'
 ];
 
 const captions = [
-  'ламповые моменты ♡',
-  'на память',
-  'молодость в кадре',
-  'свои люди',
-  'оставить здесь',
-  'тот самый кадр',
-  'ещё одна на память',
-  'вечер получился ♡',
-  'мы были здесь',
-  'ничего не менять',
-  'всё настоящее',
-  'потом будем вспоминать',
-  'молодость — сейчас',
-  'лучшие люди рядом',
-  'без повтора',
-  'просто хорошо',
-  'это точно сохранить',
-  'один вечер — сотня историй',
-  'не удалять ♡',
-  'для будущих нас',
-  'эта фотография пахнет молодостью',
-  'всё ещё здесь',
-  'сохранено в избранное',
-  'тот самый момент'
+  'ламповые моменты ♡', 'на память', 'молодость в кадре', 'свои люди',
+  'тот самый кадр', 'ещё одна на память', 'вечер получился ♡', 'мы были здесь',
+  'всё настоящее', 'потом будем вспоминать', 'молодость — сейчас', 'лучшие люди рядом',
+  'просто хорошо', 'это точно сохранить', 'не удалять ♡', 'для будущих нас',
+  'всё ещё здесь', 'тот самый момент', 'сохранить обязательно', 'молодость, привет ♡'
 ];
 
-const imageScribbles = [
-  '♡',
-  'молодость',
-  'свои',
-  'wow',
-  'вечер ♡',
-  'не удалять',
-  'улыбнись',
-  'на память',
-  'ещё 5 минут',
-  'мы здесь'
-];
-
-const doodles = ['♡', '☆', 'ϟ', '☺', '♕', '♡  ♡', '✦', '☼'];
+const imageScribbles = ['♡', 'свои', 'вечер ♡', 'на память', 'мы здесь', 'молодость', 'улыбнись', 'не удалять'];
+const doodles = ['♡', '☆', 'ϟ', '☺', '✦', '☼'];
 const attachments = ['tape-top', 'tape-corners', 'pin', 'paperclip', 'tape-side', 'double-tape', 'none'];
 const revealStyles = ['rise', 'from-left', 'from-right', 'soft-spin', 'pop'];
 
@@ -106,7 +75,7 @@ async function saveFile(url, filename) {
     a.click();
     a.remove();
     setTimeout(() => URL.revokeObjectURL(href), 1500);
-  } catch (error) {
+  } catch {
     window.open(url, '_blank', 'noopener,noreferrer');
   }
 }
@@ -136,20 +105,20 @@ function createAttachment(kind, seed) {
     const tape = document.createElement('span');
     tape.className = `attachment tape-piece ${kind} tape-${i + 1}`;
     tape.setAttribute('aria-hidden', 'true');
-    tape.style.setProperty('--tape-tilt', `${(((seed >> (i + 2)) % 60) / 10 - 3).toFixed(1)}deg`);
+    tape.style.setProperty('--tape-tilt', `${(((seed >> (i + 2)) % 50) / 10 - 2.5).toFixed(1)}deg`);
     fragment.append(tape);
   }
   return fragment;
 }
 
-function buildPolaroid(photo, globalIndex, slotIndex, clusterSize) {
+function buildPolaroid(photo, globalIndex, localIndex) {
   const seed = hash(photo.name);
   const wrap = document.createElement('div');
   const attachment = attachments[seed % attachments.length];
-  wrap.className = `polaroid-wrap slot-${slotIndex + 1} ${attachment}`;
-  wrap.style.setProperty('--tilt', `${((seed % 91) / 10 - 4.5).toFixed(1)}deg`);
-  wrap.style.setProperty('--lift', `${((seed >> 4) % 19) - 9}px`);
-  wrap.dataset.size = clusterSize;
+  const tilt = ((seed % 55) / 10 - 2.75).toFixed(1);
+  wrap.className = `polaroid-wrap ${attachment}`;
+  wrap.style.setProperty('--tilt', `${tilt}deg`);
+  wrap.style.setProperty('--delay', `${localIndex * 130}ms`);
 
   const frame = document.createElement('div');
   frame.className = 'polaroid';
@@ -162,15 +131,15 @@ function buildPolaroid(photo, globalIndex, slotIndex, clusterSize) {
   const img = document.createElement('img');
   img.src = photo.url;
   img.alt = '';
-  img.loading = globalIndex < 3 ? 'eager' : 'lazy';
+  img.loading = globalIndex < 4 ? 'eager' : 'lazy';
   img.decoding = 'async';
   button.append(img);
 
-  if (globalIndex % 4 === 1 || globalIndex % 7 === 0) {
+  if (globalIndex % 5 === 1 || globalIndex % 8 === 0) {
     const scribble = document.createElement('span');
     scribble.className = 'photo-scribble';
     scribble.textContent = imageScribbles[seed % imageScribbles.length];
-    scribble.style.setProperty('--scribble-rot', `${((seed >> 7) % 17) - 8}deg`);
+    scribble.style.setProperty('--scribble-rot', `${((seed >> 7) % 11) - 5}deg`);
     button.append(scribble);
   }
 
@@ -201,8 +170,8 @@ function buildPolaroid(photo, globalIndex, slotIndex, clusterSize) {
 function clusterPhotos(photos) {
   const groups = [];
   let cursor = 0;
+  const pattern = [2, 1, 2, 3, 2, 1, 2];
   let patternIndex = 0;
-  const pattern = [2, 3, 2, 1, 3, 2, 3];
   while (cursor < photos.length) {
     const remaining = photos.length - cursor;
     let size = Math.min(pattern[patternIndex % pattern.length], remaining);
@@ -216,24 +185,32 @@ function clusterPhotos(photos) {
 
 function buildCluster(photos, clusterIndex, startIndex) {
   const scene = document.createElement('article');
-  const layout = `layout-${(clusterIndex % 6) + 1}`;
   const reveal = revealStyles[clusterIndex % revealStyles.length];
-  scene.className = `photo-cluster count-${photos.length} ${layout} reveal ${reveal}`;
-  scene.dataset.doodle = doodles[clusterIndex % doodles.length];
+  const align = ['left', 'right', 'center', 'right', 'left'][clusterIndex % 5];
+  scene.className = `photo-cluster count-${photos.length} align-${align} reveal ${reveal}`;
+
+  const decoration = document.createElement('span');
+  decoration.className = 'cluster-doodle';
+  decoration.textContent = doodles[clusterIndex % doodles.length];
+  decoration.setAttribute('aria-hidden', 'true');
 
   const pile = document.createElement('div');
   pile.className = 'photo-pile';
   photos.forEach((photo, localIndex) => {
-    pile.append(buildPolaroid(photo, startIndex + localIndex, localIndex, photos.length));
+    pile.append(buildPolaroid(photo, startIndex + localIndex, localIndex));
   });
-  scene.append(pile);
+
+  scene.append(decoration, pile);
 
   if (clusterIndex % 2 === 0 || photos.length === 1) {
-    const note = document.createElement('span');
+    const noteWrap = document.createElement('div');
+    noteWrap.className = 'scene-note-wrap';
+    const note = document.createElement('p');
     note.className = 'scene-note type-target';
-    note.dataset.typeSpeed = String(20 + (clusterIndex % 4) * 4);
+    note.dataset.typeSpeed = String(18 + (clusterIndex % 4) * 3);
     note.textContent = notes[clusterIndex % notes.length];
-    scene.append(note);
+    noteWrap.append(note);
+    scene.append(noteWrap);
   }
 
   return scene;
@@ -269,8 +246,8 @@ async function loadContent() {
 
     if (!content.photos?.length) {
       gallery.innerHTML = `
-        <div class="empty-card ripped-card">
-          <p>Сайт уже готов. Осталось добавить фотографии в <code>public/photos</code> и заново опубликовать.</p>
+        <div class="empty-card ripped-card reveal rise">
+          <p>Сайт готов. Добавь фотографии в <code>public/photos</code> и опубликуй заново.</p>
         </div>`;
       observeReveals();
       return;
@@ -285,7 +262,7 @@ async function loadContent() {
     });
     gallery.append(fragment);
     observeReveals();
-  } catch (error) {
+  } catch {
     loading.innerHTML = '<p>не получилось открыть коробку с фотографиями.</p>';
   }
 }
@@ -309,24 +286,29 @@ async function fadeInMusic() {
     soundButton.classList.add('playing');
     soundLabel.textContent = 'пауза';
     const start = performance.now();
-    const duration = 1600;
+    const duration = 1800;
     const tick = (now) => {
       const t = Math.min(1, (now - start) / duration);
       audio.volume = Math.min(.68, t * .68);
       if (t < 1 && !audio.paused) requestAnimationFrame(tick);
     };
     requestAnimationFrame(tick);
-  } catch (error) {
+  } catch {
     soundLabel.textContent = 'включить';
   }
 }
 
 function runTypewriter(element) {
   if (!element || element.dataset.typed === 'true') return;
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const fullText = element.textContent.trim();
   if (!fullText) return;
-  const speed = Number(element.dataset.typeSpeed || 28);
+
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    element.dataset.typed = 'true';
+    return;
+  }
+
+  const speed = Number(element.dataset.typeSpeed || 26);
   element.dataset.typed = 'true';
   element.setAttribute('aria-label', fullText);
   element.textContent = '';
@@ -343,6 +325,20 @@ function runTypewriter(element) {
   }, speed);
 }
 
+function observeReveals() {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      entry.target.classList.add('visible');
+      entry.target.querySelectorAll('.type-target').forEach(runTypewriter);
+      if (entry.target.classList.contains('type-target')) runTypewriter(entry.target);
+      observer.unobserve(entry.target);
+    });
+  }, { rootMargin: '0px 0px -12% 0px', threshold: .1 });
+
+  document.querySelectorAll('.reveal:not(.visible), .type-target').forEach((el) => observer.observe(el));
+}
+
 enterButton.addEventListener('click', () => {
   fadeInMusic();
   document.querySelector('#memoryStart').scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -356,7 +352,7 @@ soundButton.addEventListener('click', async () => {
       if (audio.volume === 0) audio.volume = .68;
       soundButton.classList.add('playing');
       soundLabel.textContent = 'пауза';
-    } catch (error) {
+    } catch {
       soundLabel.textContent = 'включить';
     }
   } else {
@@ -376,20 +372,6 @@ lightbox.addEventListener('click', (event) => {
 document.addEventListener('keydown', (event) => {
   if (event.key === 'Escape' && !lightbox.hidden) closeLightbox();
 });
-
-function observeReveals() {
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-        entry.target.querySelectorAll('.type-target').forEach(runTypewriter);
-        if (entry.target.classList.contains('type-target')) runTypewriter(entry.target);
-        observer.unobserve(entry.target);
-      }
-    });
-  }, { rootMargin: '0px 0px -8% 0px', threshold: .08 });
-  document.querySelectorAll('.reveal:not(.visible), .type-target').forEach((el) => observer.observe(el));
-}
 
 runTypewriter(document.querySelector('.hero-kicker'));
 observeReveals();
