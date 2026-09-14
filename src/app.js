@@ -117,7 +117,7 @@ function buildPolaroid(photo, globalIndex, localIndex) {
   const seed = hash(photo.name);
   const wrap = document.createElement('div');
   const attachment = attachments[seed % attachments.length];
-  const tilt = ((seed % 18) / 10 - 0.9).toFixed(1);
+  const tilt = ((seed % 10) / 10 - 0.5).toFixed(1);
   wrap.className = `polaroid-wrap ${attachment}`;
   wrap.style.setProperty('--tilt', `${tilt}deg`);
   wrap.style.setProperty('--delay', `${localIndex * 130}ms`);
