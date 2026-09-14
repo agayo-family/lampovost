@@ -42,6 +42,7 @@ const captions = [
 
 const imageScribbles = ['♡', 'свои', 'вечер ♡', 'на память', 'мы здесь', 'молодость', 'улыбнись', 'не удалять'];
 const doodles = ['♡', '☆', 'ϟ', '☺', '✦', '☼'];
+const scratchTexts = ['ВЫ + AGAYO = ♡', 'свои люди', 'ламповость', 'молодость здесь', 'сохранить этот вечер', 'для будущих нас', 'вернуться сюда', 'это точно на память'];
 const attachments = ['tape-top', 'tape-corners', 'pin', 'double-tape', 'none'];
 const revealStyles = ['rise', 'from-left', 'from-right', 'soft-spin', 'pop'];
 
@@ -115,7 +116,7 @@ function buildPolaroid(photo, globalIndex, localIndex) {
   const seed = hash(photo.name);
   const wrap = document.createElement('div');
   const attachment = attachments[seed % attachments.length];
-  const tilt = ((seed % 40) / 10 - 2).toFixed(1);
+  const tilt = ((seed % 24) / 10 - 1.2).toFixed(1);
   wrap.className = `polaroid-wrap ${attachment}`;
   wrap.style.setProperty('--tilt', `${tilt}deg`);
   wrap.style.setProperty('--delay', `${localIndex * 130}ms`);
@@ -200,7 +201,17 @@ function buildCluster(photos, clusterIndex, startIndex) {
     pile.append(buildPolaroid(photo, startIndex + localIndex, localIndex));
   });
 
-  scene.append(decoration, pile);
+  const scratchA = document.createElement('span');
+  scratchA.className = 'scratch-text scratch-a';
+  scratchA.textContent = scratchTexts[clusterIndex % scratchTexts.length];
+  scratchA.setAttribute('aria-hidden', 'true');
+
+  const scratchB = document.createElement('span');
+  scratchB.className = 'scratch-text scratch-b';
+  scratchB.textContent = scratchTexts[(clusterIndex + 3) % scratchTexts.length];
+  scratchB.setAttribute('aria-hidden', 'true');
+
+  scene.append(decoration, scratchA, scratchB, pile);
 
   if (clusterIndex % 3 === 0 || photos.length === 1) {
     const noteWrap = document.createElement('div');
