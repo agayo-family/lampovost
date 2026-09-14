@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#090806" />
+  <meta name="color-scheme" content="dark" />
+  <title>Ламповость — воспоминания</title>
+  <meta name="description" content="Фотографии, которые хочется оставить рядом." />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <div class="grain" aria-hidden="true"></div>
+  <div class="scratches" aria-hidden="true"></div>
+
+  <button class="sound" id="soundButton" type="button" aria-label="Управление музыкой">
+    <span class="sound-bars" aria-hidden="true"><i></i><i></i><i></i></span>
+    <span id="soundLabel">музыка</span>
+  </button>
+
+  <header class="hero">
+    <div class="doodle doodle-heart" aria-hidden="true">♡</div>
+    <div class="doodle doodle-star" aria-hidden="true">☆</div>
+    <div class="doodle doodle-bolt" aria-hidden="true">ϟ</div>
+    <div class="doodle doodle-crown" aria-hidden="true">♕</div>
+
+    <div class="paper-strip hero-kicker">верните ламповость! ♡</div>
+
+    <div class="hero-card ripped-card">
+      <div class="black-brush">ЛАМПОВОСТЬ</div>
+      <div class="hero-and">УЖЕ</div>
+      <div class="red-brush">ОСТАЛАСЬ</div>
+      <p>здесь — в фотографиях, шуме и тех самых случайных моментах.</p>
+    </div>
+
+    <button class="enter" id="enterButton" type="button">
+      <span>открыть воспоминание</span>
+      <span aria-hidden="true">↓</span>
+    </button>
+
+    <div class="stamp" aria-hidden="true">AGAYO</div>
+  </header>
+
+  <main>
+    <section class="intro-note ripped-card" id="memoryStart">
+      <p class="handwritten">Лучшие вечера не планируются.<br>Они случаются.</p>
+      <span class="smile" aria-hidden="true">☺</span>
+    </section>
+
+    <section class="gallery" id="gallery" aria-live="polite">
+      <div class="loading" id="loading">
+        <span class="tiny-bolt" aria-hidden="true">ϟ</span>
+        <p>достаём фотографии из коробки…</p>
+      </div>
+    </section>
+
+    <section class="ending">
+      <div class="ending-card ripped-card reveal">
+        <span class="small-hand">если захотелось вернуться — значит всё получилось.</span>
+        <h2>спасибо,<br>что были рядом.</h2>
+        <p>до следующего раза ♡</p>
+      </div>
+
+      <a class="download-all" id="downloadAll" href="/photos.zip" download hidden>
+        скачать все фотографии ↓
+      </a>
+      <p class="download-note" id="downloadNote">каждый кадр можно скачать в оригинальном качестве</p>
+    </section>
+  </main>
+
+  <audio id="audio" loop preload="metadata"></audio>
+
+  <div class="lightbox" id="lightbox" hidden>
+    <button class="lightbox-close" id="lightboxClose" type="button" aria-label="Закрыть">×</button>
+    <div class="lightbox-inner">
+      <img id="lightboxImage" alt="" />
+      <div class="lightbox-bar">
+        <span id="lightboxName"></span>
+        <button class="lightbox-download" id="lightboxDownload" type="button">скачать оригинал ↓</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/app.js" defer></script>
+</body>
+</html>
