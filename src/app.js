@@ -170,19 +170,7 @@ function buildPolaroid(photo, globalIndex, localIndex) {
 }
 
 function clusterPhotos(photos) {
-  const groups = [];
-  let cursor = 0;
-  const pattern = [2, 1, 2, 2, 3, 1, 2];
-  let patternIndex = 0;
-  while (cursor < photos.length) {
-    const remaining = photos.length - cursor;
-    let size = Math.min(pattern[patternIndex % pattern.length], remaining);
-    if (remaining === 4) size = 2;
-    groups.push(photos.slice(cursor, cursor + size));
-    cursor += size;
-    patternIndex += 1;
-  }
-  return groups;
+  return photos.map((photo) => [photo]);
 }
 
 function buildCluster(photos, clusterIndex, startIndex) {
