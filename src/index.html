@@ -46,7 +46,16 @@
     </div>
 
     <div class="stamp hero-enter hero-enter-late" aria-hidden="true">AGAYO</div>
-    <div class="hero-etched" aria-hidden="true">ВЫ + AGAYO = ♡</div>
+    <svg class="hero-etched" viewBox="0 0 560 90" aria-hidden="true">
+      <defs>
+        <filter id="roughScratch" x="-10%" y="-25%" width="120%" height="150%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.035 0.18" numOctaves="2" seed="11" result="noise"/>
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale="2.4" xChannelSelector="R" yChannelSelector="G"/>
+        </filter>
+      </defs>
+      <text x="18" y="58" class="etch-shadow" filter="url(#roughScratch)">ВЫ + AGAYO = ♡</text>
+      <text x="16" y="56" class="etch-line" filter="url(#roughScratch)">ВЫ + AGAYO = ♡</text>
+    </svg>
   </header>
 
   <main>
