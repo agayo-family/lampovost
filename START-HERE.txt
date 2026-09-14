@@ -1,4 +1,4 @@
-LAMPOVOST SITE v7
+LAMPOVOST SITE v8
 
 1. Положи все фото в public/photos/
 2. Положи музыку в public/music/

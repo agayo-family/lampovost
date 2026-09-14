@@ -153,12 +153,15 @@ header, main, .sound, .lightbox { position: relative; z-index: 5; }
   letter-spacing: -.04em;
   line-height: .88;
   text-wrap: balance;
+  max-width: 92%;
+  margin-inline: auto;
+  white-space: nowrap;
 }
-.rough-title-black { font-size: clamp(52px, 9vw, 126px); color: #0b0907; }
+.rough-title-black { font-size: clamp(46px, 7.1vw, 104px); color: #0b0907; }
 .rough-title-red {
   position: relative;
   display: inline-block;
-  font-size: clamp(56px, 9.6vw, 138px);
+  font-size: clamp(48px, 7.25vw, 108px);
   color: var(--red);
   text-shadow: 2px 2px 0 var(--red-dark);
 }
@@ -604,8 +607,8 @@ header, main, .sound, .lightbox { position: relative; z-index: 5; }
   .hero { min-height: 94svh; padding: 72px 14px 58px; }
   .hero::before { inset: 2vh 10px; }
   .hero-card { width: 94vw; padding: 44px 30px 40px; }
-  .rough-title-black { font-size: clamp(38px, 11vw, 62px); }
-  .rough-title-red { font-size: clamp(39px, 11.5vw, 66px); }
+  .rough-title-black { font-size: clamp(34px, 9.2vw, 54px); }
+  .rough-title-red { font-size: clamp(35px, 9.4vw, 56px); }
   .hero-and { margin: 8px 0 2px; }
   .hero-card p { margin-top: 36px; }
   .paper-strip { max-width: 90vw; font-size: 25px; min-height: 49px; }
@@ -645,8 +648,8 @@ header, main, .sound, .lightbox { position: relative; z-index: 5; }
 
 @media (max-width: 430px) {
   .hero-card { padding-left: 24px; padding-right: 24px; }
-  .rough-title-black { font-size: 36px; letter-spacing: -.035em; }
-  .rough-title-red { font-size: 38px; letter-spacing: -.035em; }
+  .rough-title-black { font-size: clamp(30px, 9vw, 36px); letter-spacing: -.045em; }
+  .rough-title-red { font-size: clamp(31px, 9.2vw, 38px); letter-spacing: -.045em; }
   .hero-card p { font-size: 19px; }
   .photo-cluster { padding: 26px 12px 30px; }
   .polaroid { padding-bottom: 64px; }
