@@ -107,7 +107,7 @@ function createAttachment(kind, seed) {
     const tape = document.createElement('span');
     tape.className = `attachment tape-piece ${kind} tape-${i + 1}`;
     tape.setAttribute('aria-hidden', 'true');
-    tape.style.setProperty('--tape-tilt', `${(((seed >> (i + 2)) % 50) / 10 - 2.5).toFixed(1)}deg`);
+    tape.style.setProperty('--tape-tilt', `${(((seed >> (i + 2)) % 60) / 10 - 3).toFixed(1)}deg`);
     fragment.append(tape);
   }
   return fragment;
