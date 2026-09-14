@@ -44,7 +44,7 @@ const imageScribbles = ['♡', 'свои', 'вечер ♡', 'на память'
 const doodles = ['♡', '☆', 'ϟ', '☺', '✦', '☼'];
 const scratchTexts = ['ВЫ + AGAYO = ♡', 'свои люди', 'ламповость', 'молодость здесь', 'сохранить этот вечер', 'для будущих нас', 'вернуться сюда', 'это точно на память'];
 const graffitiWords = ['СВОИ', 'AGAYO', 'МОЛОДОСТЬ', 'ЛАМПОВОСТЬ'];
-const attachments = ['tape-top', 'tape-corners', 'pin', 'double-tape'];
+const attachments = ['tape-top', 'tape-corners', 'pin', 'paperclip', 'tape-side', 'double-tape', 'none'];
 const revealStyles = ['rise', 'from-left', 'from-right', 'soft-spin', 'pop'];
 
 let content = { photos: [], music: null, zip: null };
@@ -113,14 +113,14 @@ function createAttachment(kind, seed) {
   return fragment;
 }
 
-function buildPolaroid(photo, globalIndex, localIndex) {
+function buildPolaroid(photo, globalIndex, slotIndex, clusterSize) {
   const seed = hash(photo.name);
   const wrap = document.createElement('div');
   const attachment = attachments[seed % attachments.length];
-  const tilt = ((seed % 10) / 10 - 0.5).toFixed(1);
-  wrap.className = `polaroid-wrap ${attachment}`;
-  wrap.style.setProperty('--tilt', `${tilt}deg`);
-  wrap.style.setProperty('--delay', `${localIndex * 130}ms`);
+  wrap.className = `polaroid-wrap slot-${slotIndex + 1} ${attachment}`;
+  wrap.style.setProperty('--tilt', `${((seed % 91) / 10 - 4.5).toFixed(1)}deg`);
+  wrap.style.setProperty('--lift', `${((seed >> 4) % 19) - 9}px`);
+  wrap.dataset.size = clusterSize;
 
   const frame = document.createElement('div');
   frame.className = 'polaroid';
@@ -133,15 +133,15 @@ function buildPolaroid(photo, globalIndex, localIndex) {
   const img = document.createElement('img');
   img.src = photo.url;
   img.alt = '';
-  img.loading = globalIndex < 4 ? 'eager' : 'lazy';
+  img.loading = globalIndex < 3 ? 'eager' : 'lazy';
   img.decoding = 'async';
   button.append(img);
 
-  if (globalIndex % 5 === 1 || globalIndex % 8 === 0) {
+  if (globalIndex % 4 === 1 || globalIndex % 7 === 0) {
     const scribble = document.createElement('span');
     scribble.className = 'photo-scribble';
     scribble.textContent = imageScribbles[seed % imageScribbles.length];
-    scribble.style.setProperty('--scribble-rot', `${((seed >> 7) % 11) - 5}deg`);
+    scribble.style.setProperty('--scribble-rot', `${((seed >> 7) % 17) - 8}deg`);
     button.append(scribble);
   }
 
@@ -170,25 +170,27 @@ function buildPolaroid(photo, globalIndex, localIndex) {
 }
 
 function clusterPhotos(photos) {
-  return photos.map((photo) => [photo]);
+  const groups = [];
+  let cursor = 0;
+  let patternIndex = 0;
+  const pattern = [2, 3, 2, 1, 3, 2, 3];
+  while (cursor < photos.length) {
+    const remaining = photos.length - cursor;
+    let size = Math.min(pattern[patternIndex % pattern.length], remaining);
+    if (remaining === 4) size = 2;
+    groups.push(photos.slice(cursor, cursor + size));
+    cursor += size;
+    patternIndex += 1;
+  }
+  return groups;
 }
 
 function buildCluster(photos, clusterIndex, startIndex) {
   const scene = document.createElement('article');
+  const layout = `layout-${(clusterIndex % 6) + 1}`;
   const reveal = revealStyles[clusterIndex % revealStyles.length];
-  const align = ['left', 'right', 'center', 'right', 'left'][clusterIndex % 5];
-  scene.className = `photo-cluster count-${photos.length} align-${align} reveal ${reveal}`;
-
-  const decoration = document.createElement('span');
-  decoration.className = 'cluster-doodle';
-  decoration.textContent = doodles[clusterIndex % doodles.length];
-  decoration.setAttribute('aria-hidden', 'true');
-
-  const pile = document.createElement('div');
-  pile.className = 'photo-pile';
-  photos.forEach((photo, localIndex) => {
-    pile.append(buildPolaroid(photo, startIndex + localIndex, localIndex));
-  });
+  scene.className = `photo-cluster count-${photos.length} ${layout} reveal ${reveal}`;
+  scene.dataset.doodle = doodles[clusterIndex % doodles.length];
 
   const scratchA = document.createElement('span');
   scratchA.className = 'scratch-text scratch-a';
@@ -205,7 +207,13 @@ function buildCluster(photos, clusterIndex, startIndex) {
   graffiti.textContent = graffitiWords[clusterIndex % graffitiWords.length];
   graffiti.setAttribute('aria-hidden', 'true');
 
-  scene.append(decoration, scratchA, scratchB, graffiti, pile);
+  const pile = document.createElement('div');
+  pile.className = 'photo-pile';
+  photos.forEach((photo, localIndex) => {
+    pile.append(buildPolaroid(photo, startIndex + localIndex, localIndex, photos.length));
+  });
+
+  scene.append(scratchA, scratchB, graffiti, pile);
 
   if (clusterIndex % 3 === 0 || photos.length === 1) {
     const noteWrap = document.createElement('div');
