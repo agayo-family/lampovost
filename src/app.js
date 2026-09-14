@@ -113,17 +113,16 @@ function createAttachment(kind, seed) {
   return fragment;
 }
 
-function buildPhotoScene(photo, index) {
-  const scene = document.createElement('article');
-  const alignment = index % 6 === 2 ? 'center' : index % 2 === 0 ? 'left' : 'right';
-  const reveal = revealStyles[index % revealStyles.length];
-  scene.className = `photo-scene ${alignment} reveal ${reveal}`;
+function buildPolaroid(photo, globalIndex, slotIndex, clusterSize) {
+  const seed = hash(photo.name);
+  const wrap = document.createElement('div');
+  wrap.className = 'polaroid-wrap';
+  const tilt = ((seed % 75) / 10 - 3.7).toFixed(1);
+  wrap.style.setProperty('--tilt', `${tilt}deg`);
+  wrap.style.setProperty('--delay', '0ms');
 
   const frame = document.createElement('div');
   frame.className = 'polaroid';
-  const seed = hash(photo.name);
-  const tilt = ((seed % 75) / 10 - 3.7).toFixed(1);
-  frame.style.setProperty('--tilt', `${tilt}deg`);
 
   const button = document.createElement('button');
   button.className = 'photo-button';
@@ -133,7 +132,7 @@ function buildPhotoScene(photo, index) {
   const img = document.createElement('img');
   img.src = photo.url;
   img.alt = '';
-  img.loading = index < 2 ? 'eager' : 'lazy';
+  img.loading = globalIndex < 2 ? 'eager' : 'lazy';
   img.decoding = 'async';
   button.append(img);
 
@@ -142,7 +141,7 @@ function buildPhotoScene(photo, index) {
 
   const caption = document.createElement('span');
   caption.className = 'photo-caption';
-  caption.textContent = index % 3 === 0 ? 'на память' : index % 3 === 1 ? 'этот вечер' : 'оставить здесь';
+  caption.textContent = globalIndex % 3 === 0 ? 'на память' : globalIndex % 3 === 1 ? 'этот вечер' : 'оставить здесь';
 
   const download = document.createElement('button');
   download.className = 'photo-download';
@@ -156,16 +155,56 @@ function buildPhotoScene(photo, index) {
 
   footer.append(caption, download);
   frame.append(button, footer);
-  scene.append(frame);
+  wrap.append(frame);
+  button.addEventListener('click', () => openLightbox(photo));
+  return wrap;
+}
 
-  if (index % 3 === 1 || index % 7 === 0) {
-    const note = document.createElement('span');
-    note.className = 'scene-note';
-    note.textContent = notes[index % notes.length];
-    scene.append(note);
+function clusterPhotos(photos) {
+  return photos.map((photo) => [photo]);
+}
+
+function buildCluster(photos, clusterIndex, startIndex) {
+  const scene = document.createElement('article');
+  const layout = `layout-${(clusterIndex % 6) + 1}`;
+  const reveal = revealStyles[clusterIndex % revealStyles.length];
+  scene.className = `photo-cluster count-${photos.length} ${layout} reveal ${reveal}`;
+  scene.dataset.doodle = doodles[clusterIndex % doodles.length];
+
+  const scratchA = document.createElement('span');
+  scratchA.className = 'scratch-text scratch-a';
+  scratchA.textContent = scratchTexts[clusterIndex % scratchTexts.length];
+  scratchA.setAttribute('aria-hidden', 'true');
+
+  const scratchB = document.createElement('span');
+  scratchB.className = 'scratch-text scratch-b';
+  scratchB.textContent = scratchTexts[(clusterIndex + 3) % scratchTexts.length];
+  scratchB.setAttribute('aria-hidden', 'true');
+
+  const graffiti = document.createElement('span');
+  graffiti.className = 'graffiti-word';
+  graffiti.textContent = graffitiWords[clusterIndex % graffitiWords.length];
+  graffiti.setAttribute('aria-hidden', 'true');
+
+  const pile = document.createElement('div');
+  pile.className = 'photo-pile';
+  photos.forEach((photo, localIndex) => {
+    pile.append(buildPolaroid(photo, startIndex + localIndex, localIndex, photos.length));
+  });
+
+  scene.append(scratchA, scratchB, graffiti, pile);
+
+  if (clusterIndex % 3 === 0 || photos.length === 1) {
+    const noteWrap = document.createElement('div');
+    noteWrap.className = 'scene-note-wrap';
+    const note = document.createElement('p');
+    note.className = 'scene-note type-target';
+    note.dataset.typeSpeed = String(18 + (clusterIndex % 4) * 3);
+    note.textContent = notes[clusterIndex % notes.length];
+    noteWrap.append(note);
+    scene.append(noteWrap);
   }
 
-  button.addEventListener('click', () => openLightbox(photo));
   return scene;
 }
 
