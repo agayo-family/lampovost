@@ -1,9 +1,1 @@
-PHOTO-ONLY PATCH
-
-Заменить только:
-- src/app.js
-- src/styles.css
-
-Не заменять public/photos, public/music, src/index.html и остальные файлы.
-
-Патч возвращает только отображение фотографий к логике v1, сохраняя остальной дизайн текущей версии.
+Replace src/styles.css in your current project with this file. It changes only how photo frames size themselves: the polaroid frame now wraps to the actual visible photo size instead of forcing a fixed width.

@@ -998,8 +998,8 @@ header, main, .sound, .lightbox { position: relative; z-index: 5; }
   bottom: auto;
   translate: none;
   scale: 1;
-  width: min(560px, 76vw);
-  max-width: 100%;
+  width: fit-content;
+  max-width: min(560px, 76vw);
   margin: 0;
   transform: rotate(var(--tilt));
   filter: drop-shadow(0 24px 34px rgba(0,0,0,.44));
@@ -1007,8 +1007,8 @@ header, main, .sound, .lightbox { position: relative; z-index: 5; }
   z-index: 2;
   opacity: 1;
 }
-.photo-cluster.count-1:nth-of-type(4n+1) .polaroid-wrap { width: min(610px, 79vw); }
-.photo-cluster.count-1:nth-of-type(5n) .polaroid-wrap { width: min(470px, 72vw); }
+.photo-cluster.count-1:nth-of-type(4n+1) .polaroid-wrap { max-width: min(610px, 79vw); }
+.photo-cluster.count-1:nth-of-type(5n) .polaroid-wrap { max-width: min(470px, 72vw); }
 .photo-cluster.count-1 .polaroid-wrap:hover {
   transform: rotate(0deg) translateY(-5px);
   filter: drop-shadow(0 30px 42px rgba(0,0,0,.50));
@@ -1017,6 +1017,9 @@ header, main, .sound, .lightbox { position: relative; z-index: 5; }
 
 .photo-cluster.count-1 .polaroid {
   position: relative;
+  display: inline-block;
+  width: auto;
+  max-width: 100%;
   background: var(--paper);
   background-image: none;
   background-size: auto;
@@ -1027,8 +1030,9 @@ header, main, .sound, .lightbox { position: relative; z-index: 5; }
 }
 .photo-cluster.count-1 .polaroid::after { display: none; }
 .photo-cluster.count-1 .photo-button {
-  display: block;
-  width: 100%;
+  display: inline-block;
+  width: auto;
+  max-width: 100%;
   padding: 0;
   border: 0;
   background: #100d0b;
@@ -1038,7 +1042,7 @@ header, main, .sound, .lightbox { position: relative; z-index: 5; }
 }
 .photo-cluster.count-1 .photo-button img {
   display: block;
-  width: 100%;
+  width: auto;
   max-width: 100%;
   height: auto;
   max-height: 68vh;
