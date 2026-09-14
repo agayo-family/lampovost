@@ -1,0 +1,13 @@
+ЛАМПОВОСТЬ — БЫСТРЫЙ СТАРТ
+
+1. Фотографии: public/photos/
+2. Музыка: public/music/
+3. Для порядка назови фото 001.jpg, 002.jpg, 003.jpg ...
+4. В GitHub загружай СОДЕРЖИМОЕ этой папки.
+5. Vercel: Framework = Other, Build Command = npm run build, Output Directory = dist.
+6. Deploy — и отправляй полученную ссылку людям.
+
+Кнопки Яндекс Диска уже ведут сюда:
+https://disk.yandex.ru/d/H10Ne-YjYh7yzQ
+
+Полная инструкция — README.md

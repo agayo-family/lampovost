@@ -12,16 +12,69 @@ const lightboxClose = document.querySelector('#lightboxClose');
 const downloadAll = document.querySelector('#downloadAll');
 
 const notes = [
+  'молодость выглядит примерно так.',
+  'вот ради таких вечеров всё и затевалось.',
+  'свои люди — самый тёплый фильтр.',
   'не постановочно. поэтому и красиво.',
-  'та самая секунда, которую хотелось оставить.',
-  'где-то между музыкой и “ещё одну фотку”.',
+  'молодость не перемотать. зато можно сохранить.',
+  'тот самый вечер, который потом вспоминают случайно.',
+  'мы просто были здесь. и этого достаточно.',
   'случайный кадр — любимый кадр.',
-  'это точно стоило запомнить.',
-  'если помнишь не всё — фотографии помогут.',
-  'оставим этот момент здесь.'
+  'музыка закончится, а фотография останется.',
+  'ещё одну фотку — и точно идём.',
+  'если молодость можно сфотографировать — то вот она.',
+  'хорошие люди. классная атмосфера. ламповость в каждом.',
+  'не идеальный кадр. идеальное воспоминание.',
+  'тот возраст, когда воспоминания важнее планов.',
+  'вечер, который оказался больше, чем просто вечер.',
+  'лучшие истории начинаются без сценария.',
+  'пусть этот момент полежит здесь.',
+  'молодость — это когда «ещё пять минут» превращаются в воспоминание.'
 ];
-const doodles = ['♡', '☆', 'ϟ', '☺', '♕', '♡  ♡'];
-const captions = ['ламповые моменты ♡', 'на память', 'эта ночь', 'свои люди', 'оставить здесь', 'тот самый кадр'];
+
+const captions = [
+  'ламповые моменты ♡',
+  'на память',
+  'молодость в кадре',
+  'свои люди',
+  'оставить здесь',
+  'тот самый кадр',
+  'ещё одна на память',
+  'вечер получился ♡',
+  'мы были здесь',
+  'ничего не менять',
+  'всё настоящее',
+  'потом будем вспоминать',
+  'молодость — сейчас',
+  'лучшие люди рядом',
+  'без повтора',
+  'просто хорошо',
+  'это точно сохранить',
+  'один вечер — сотня историй',
+  'не удалять ♡',
+  'для будущих нас',
+  'эта фотография пахнет молодостью',
+  'всё ещё здесь',
+  'сохранено в избранное',
+  'тот самый момент'
+];
+
+const imageScribbles = [
+  '♡',
+  'молодость',
+  'свои',
+  'wow',
+  'вечер ♡',
+  'не удалять',
+  'улыбнись',
+  'на память',
+  'ещё 5 минут',
+  'мы здесь'
+];
+
+const doodles = ['♡', '☆', 'ϟ', '☺', '♕', '♡  ♡', '✦', '☼'];
+const attachments = ['tape-top', 'tape-corners', 'pin', 'paperclip', 'tape-side', 'double-tape', 'none'];
+const revealStyles = ['rise', 'from-left', 'from-right', 'soft-spin', 'pop'];
 
 let content = { photos: [], music: null, zip: null };
 let activePhoto = null;
@@ -54,28 +107,49 @@ async function saveFile(url, filename) {
     a.remove();
     setTimeout(() => URL.revokeObjectURL(href), 1500);
   } catch (error) {
-    // Safari/iOS fallback: opening the original still lets the user save/share it.
     window.open(url, '_blank', 'noopener,noreferrer');
   }
 }
 
-function buildPhoto(photo, index) {
-  const scene = document.createElement('article');
-  const alignment = index % 7 === 3 ? 'center' : index % 2 === 0 ? 'left' : 'right';
-  scene.className = `photo-scene ${alignment} reveal`;
-  scene.dataset.doodle = doodles[index % doodles.length];
+function createAttachment(kind, seed) {
+  const fragment = document.createDocumentFragment();
+  if (kind === 'none') return fragment;
 
-  const wrap = document.createElement('div');
-  wrap.className = 'polaroid-wrap';
+  if (kind === 'pin') {
+    const pin = document.createElement('span');
+    pin.className = 'attachment pin';
+    pin.setAttribute('aria-hidden', 'true');
+    fragment.append(pin);
+    return fragment;
+  }
+
+  if (kind === 'paperclip') {
+    const clip = document.createElement('span');
+    clip.className = 'attachment paperclip';
+    clip.setAttribute('aria-hidden', 'true');
+    fragment.append(clip);
+    return fragment;
+  }
+
+  const count = kind === 'double-tape' || kind === 'tape-corners' ? 2 : 1;
+  for (let i = 0; i < count; i += 1) {
+    const tape = document.createElement('span');
+    tape.className = `attachment tape-piece ${kind} tape-${i + 1}`;
+    tape.setAttribute('aria-hidden', 'true');
+    tape.style.setProperty('--tape-tilt', `${(((seed >> (i + 2)) % 60) / 10 - 3).toFixed(1)}deg`);
+    fragment.append(tape);
+  }
+  return fragment;
+}
+
+function buildPolaroid(photo, globalIndex, slotIndex, clusterSize) {
   const seed = hash(photo.name);
-  const tilt = ((seed % 73) / 10 - 3.6).toFixed(1);
-  const tapeTilt = (((seed >> 3) % 70) / 10 - 3.5).toFixed(1);
-  wrap.style.setProperty('--tilt', `${tilt}deg`);
-  wrap.style.setProperty('--tape', `${tapeTilt}deg`);
-
-  const tape = document.createElement('span');
-  tape.className = 'tape';
-  tape.setAttribute('aria-hidden', 'true');
+  const wrap = document.createElement('div');
+  const attachment = attachments[seed % attachments.length];
+  wrap.className = `polaroid-wrap slot-${slotIndex + 1} ${attachment}`;
+  wrap.style.setProperty('--tilt', `${((seed % 91) / 10 - 4.5).toFixed(1)}deg`);
+  wrap.style.setProperty('--lift', `${((seed >> 4) % 19) - 9}px`);
+  wrap.dataset.size = clusterSize;
 
   const frame = document.createElement('div');
   frame.className = 'polaroid';
@@ -88,16 +162,24 @@ function buildPhoto(photo, index) {
   const img = document.createElement('img');
   img.src = photo.url;
   img.alt = '';
-  img.loading = index < 2 ? 'eager' : 'lazy';
+  img.loading = globalIndex < 3 ? 'eager' : 'lazy';
   img.decoding = 'async';
   button.append(img);
+
+  if (globalIndex % 4 === 1 || globalIndex % 7 === 0) {
+    const scribble = document.createElement('span');
+    scribble.className = 'photo-scribble';
+    scribble.textContent = imageScribbles[seed % imageScribbles.length];
+    scribble.style.setProperty('--scribble-rot', `${((seed >> 7) % 17) - 8}deg`);
+    button.append(scribble);
+  }
 
   const footer = document.createElement('div');
   footer.className = 'polaroid-footer';
 
   const caption = document.createElement('span');
   caption.className = 'photo-caption';
-  caption.textContent = captions[index % captions.length];
+  caption.textContent = captions[seed % captions.length];
 
   const download = document.createElement('button');
   download.className = 'photo-download';
@@ -111,17 +193,49 @@ function buildPhoto(photo, index) {
 
   footer.append(caption, download);
   frame.append(button, footer);
-  wrap.append(tape, frame);
-  scene.append(wrap);
+  wrap.append(createAttachment(attachment, seed), frame);
+  button.addEventListener('click', () => openLightbox(photo));
+  return wrap;
+}
 
-  if (index % 3 === 1 || index % 6 === 0) {
+function clusterPhotos(photos) {
+  const groups = [];
+  let cursor = 0;
+  let patternIndex = 0;
+  const pattern = [2, 3, 2, 1, 3, 2, 3];
+  while (cursor < photos.length) {
+    const remaining = photos.length - cursor;
+    let size = Math.min(pattern[patternIndex % pattern.length], remaining);
+    if (remaining === 4) size = 2;
+    groups.push(photos.slice(cursor, cursor + size));
+    cursor += size;
+    patternIndex += 1;
+  }
+  return groups;
+}
+
+function buildCluster(photos, clusterIndex, startIndex) {
+  const scene = document.createElement('article');
+  const layout = `layout-${(clusterIndex % 6) + 1}`;
+  const reveal = revealStyles[clusterIndex % revealStyles.length];
+  scene.className = `photo-cluster count-${photos.length} ${layout} reveal ${reveal}`;
+  scene.dataset.doodle = doodles[clusterIndex % doodles.length];
+
+  const pile = document.createElement('div');
+  pile.className = 'photo-pile';
+  photos.forEach((photo, localIndex) => {
+    pile.append(buildPolaroid(photo, startIndex + localIndex, localIndex, photos.length));
+  });
+  scene.append(pile);
+
+  if (clusterIndex % 2 === 0 || photos.length === 1) {
     const note = document.createElement('span');
-    note.className = 'scene-note';
-    note.textContent = notes[index % notes.length];
+    note.className = 'scene-note type-target';
+    note.dataset.typeSpeed = String(20 + (clusterIndex % 4) * 4);
+    note.textContent = notes[clusterIndex % notes.length];
     scene.append(note);
   }
 
-  button.addEventListener('click', () => openLightbox(photo));
   return scene;
 }
 
@@ -156,13 +270,19 @@ async function loadContent() {
     if (!content.photos?.length) {
       gallery.innerHTML = `
         <div class="empty-card ripped-card">
-          <p>Сайт уже готов. Осталось положить фотографии в <code>public/photos</code> и заново опубликовать.</p>
+          <p>Сайт уже готов. Осталось добавить фотографии в <code>public/photos</code> и заново опубликовать.</p>
         </div>`;
+      observeReveals();
       return;
     }
 
+    const groups = clusterPhotos(content.photos);
+    let startIndex = 0;
     const fragment = document.createDocumentFragment();
-    content.photos.forEach((photo, index) => fragment.append(buildPhoto(photo, index)));
+    groups.forEach((group, index) => {
+      fragment.append(buildCluster(group, index, startIndex));
+      startIndex += group.length;
+    });
     gallery.append(fragment);
     observeReveals();
   } catch (error) {
@@ -199,6 +319,28 @@ async function fadeInMusic() {
   } catch (error) {
     soundLabel.textContent = 'включить';
   }
+}
+
+function runTypewriter(element) {
+  if (!element || element.dataset.typed === 'true') return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const fullText = element.textContent.trim();
+  if (!fullText) return;
+  const speed = Number(element.dataset.typeSpeed || 28);
+  element.dataset.typed = 'true';
+  element.setAttribute('aria-label', fullText);
+  element.textContent = '';
+  element.classList.add('typing');
+  let index = 0;
+  const timer = window.setInterval(() => {
+    element.textContent += fullText[index] || '';
+    index += 1;
+    if (index >= fullText.length) {
+      window.clearInterval(timer);
+      element.classList.remove('typing');
+      element.classList.add('typed');
+    }
+  }, speed);
 }
 
 enterButton.addEventListener('click', () => {
@@ -240,11 +382,15 @@ function observeReveals() {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
         entry.target.classList.add('visible');
+        entry.target.querySelectorAll('.type-target').forEach(runTypewriter);
+        if (entry.target.classList.contains('type-target')) runTypewriter(entry.target);
         observer.unobserve(entry.target);
       }
     });
-  }, { rootMargin: '0px 0px -8% 0px', threshold: .07 });
-  document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+  }, { rootMargin: '0px 0px -8% 0px', threshold: .08 });
+  document.querySelectorAll('.reveal:not(.visible), .type-target').forEach((el) => observer.observe(el));
 }
 
+runTypewriter(document.querySelector('.hero-kicker'));
+observeReveals();
 loadContent();

@@ -7,6 +7,9 @@
   <meta name="color-scheme" content="dark" />
   <title>Ламповость — воспоминания</title>
   <meta name="description" content="Фотографии, которые хочется оставить рядом." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Rubik+Dirt&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/styles.css" />
 </head>
 <body>
@@ -24,26 +27,30 @@
     <div class="doodle doodle-bolt" aria-hidden="true">ϟ</div>
     <div class="doodle doodle-crown" aria-hidden="true">♕</div>
 
-    <div class="paper-strip hero-kicker">верните ламповость! ♡</div>
+    <div class="paper-strip hero-kicker type-target" data-type-speed="48">верните ламповость! ♡</div>
 
-    <div class="hero-card ripped-card">
-      <div class="black-brush">ЛАМПОВОСТЬ</div>
-      <div class="hero-and">УЖЕ</div>
-      <div class="red-brush">ОСТАЛАСЬ</div>
-      <p>здесь — в фотографиях, шуме и тех самых случайных моментах.</p>
+    <div class="hero-card ripped-card reveal visible">
+      <div class="rough-title rough-title-black" aria-label="Ламповость">ЛАМПОВОСТЬ</div>
+      <div class="hero-and">ЭТО</div>
+      <div class="rough-title rough-title-red">МОЛОДОСТЬ</div>
+      <p>которую хочется не пролистать, а сохранить — в фотографиях, музыке и своих людях.</p>
     </div>
 
-    <button class="enter" id="enterButton" type="button">
-      <span>открыть воспоминание</span>
-      <span aria-hidden="true">↓</span>
-    </button>
+    <div class="hero-actions">
+      <button class="enter marker-button" id="enterButton" type="button">
+        <span>открыть воспоминание</span><span aria-hidden="true">↓</span>
+      </button>
+      <a class="disk-link marker-button marker-button-outline" href="https://disk.yandex.ru/d/H10Ne-YjYh7yzQ" target="_blank" rel="noopener noreferrer">
+        все фотографии на Яндекс Диске ↗
+      </a>
+    </div>
 
     <div class="stamp" aria-hidden="true">AGAYO</div>
   </header>
 
   <main>
-    <section class="intro-note ripped-card" id="memoryStart">
-      <p class="handwritten">Лучшие вечера не планируются.<br>Они случаются.</p>
+    <section class="intro-note ripped-card reveal" id="memoryStart">
+      <p class="handwritten type-target" data-type-speed="28">Лучшие вечера не планируются. Они случаются — а молодость потом остаётся в таких кадрах.</p>
       <span class="smile" aria-hidden="true">☺</span>
     </section>
 
@@ -56,15 +63,20 @@
 
     <section class="ending">
       <div class="ending-card ripped-card reveal">
-        <span class="small-hand">если захотелось вернуться — значит всё получилось.</span>
-        <h2>спасибо,<br>что были рядом.</h2>
-        <p>до следующего раза ♡</p>
+        <span class="small-hand type-target" data-type-speed="34">если захотелось вернуться — значит, этот вечер стоило сохранить.</span>
+        <h2>молодость<br><span>остаётся здесь.</span></h2>
+        <p>спасибо, что были рядом ♡</p>
       </div>
 
-      <a class="download-all" id="downloadAll" href="/photos.zip" download hidden>
-        скачать все фотографии ↓
-      </a>
-      <p class="download-note" id="downloadNote">каждый кадр можно скачать в оригинальном качестве</p>
+      <div class="ending-actions">
+        <a class="download-all marker-button" id="downloadAll" href="/photos.zip" download hidden>
+          скачать все фотографии ↓
+        </a>
+        <a class="disk-link marker-button marker-button-outline" href="https://disk.yandex.ru/d/H10Ne-YjYh7yzQ" target="_blank" rel="noopener noreferrer">
+          открыть все фото на Яндекс Диске ↗
+        </a>
+      </div>
+      <p class="download-note" id="downloadNote">каждый кадр можно скачать отдельно в оригинальном качестве</p>
     </section>
   </main>
 
