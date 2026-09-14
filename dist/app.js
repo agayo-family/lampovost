@@ -42,7 +42,7 @@ const captions = [
 
 const imageScribbles = ['♡', 'свои', 'вечер ♡', 'на память', 'мы здесь', 'молодость', 'улыбнись', 'не удалять'];
 const doodles = ['♡', '☆', 'ϟ', '☺', '✦', '☼'];
-const attachments = ['tape-top', 'tape-corners', 'pin', 'paperclip', 'tape-side', 'double-tape', 'none'];
+const attachments = ['tape-top', 'tape-corners', 'pin', 'double-tape', 'none'];
 const revealStyles = ['rise', 'from-left', 'from-right', 'soft-spin', 'pop'];
 
 let content = { photos: [], music: null, zip: null };
@@ -115,7 +115,7 @@ function buildPolaroid(photo, globalIndex, localIndex) {
   const seed = hash(photo.name);
   const wrap = document.createElement('div');
   const attachment = attachments[seed % attachments.length];
-  const tilt = ((seed % 55) / 10 - 2.75).toFixed(1);
+  const tilt = ((seed % 40) / 10 - 2).toFixed(1);
   wrap.className = `polaroid-wrap ${attachment}`;
   wrap.style.setProperty('--tilt', `${tilt}deg`);
   wrap.style.setProperty('--delay', `${localIndex * 130}ms`);
@@ -202,7 +202,7 @@ function buildCluster(photos, clusterIndex, startIndex) {
 
   scene.append(decoration, pile);
 
-  if (clusterIndex % 2 === 0 || photos.length === 1) {
+  if (clusterIndex % 3 === 0 || photos.length === 1) {
     const noteWrap = document.createElement('div');
     noteWrap.className = 'scene-note-wrap';
     const note = document.createElement('p');
